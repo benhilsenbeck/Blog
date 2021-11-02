@@ -1,0 +1,78 @@
+
+@import './base.scss';
+
+body, html {
+    height: 100%;
+    width: 100%;
+    background-color: $primary-color;
+
+}
+
+.carousel {
+    margin: auto;
+    margin-top: 2%;
+    width: 30%;
+}
+
+
+.nav-item {
+    width: 130px !important;
+    padding-left: 0% !important;
+    padding-right: 0% !important;
+}
+
+.homeLink, .pollsLink {
+    width: 100px !important;
+}
+
+.link {
+    color: white;
+}
+
+.jumbotron {
+    margin-top: 3%;
+    margin-bottom: 3%;
+    background-color: $secondary-color;
+}
+
+.emailInput {
+    width: 50%;
+    margin: auto;
+}
+
+p {
+    color: white;
+}
+
+h1, h2, h3 {
+    color: white
+}
+
+.blog {
+    margin-bottom: 8%;
+
+    img {
+        width: 90%;
+        height: 90%;
+    }
+
+    .blogName {
+        font-size: 180%;
+        font-weight: 700;
+        margin-bottom: 1%;
+    }
+
+}
+
+@media only screen and (max-width: 1400px) {
+    .carousel {
+        margin: auto;
+        margin-top: 2%;
+        width: 40%;
+    }
+}
+
+
+
+
+

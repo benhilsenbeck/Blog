@@ -1,0 +1,6 @@
+settings.py
+__pycache__
+node_modules
+package-lock.json
+.env
+.eslintcache
