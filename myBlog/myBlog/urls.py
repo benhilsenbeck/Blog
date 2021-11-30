@@ -10,6 +10,7 @@ urlpatterns = [
     path('token/obtain', views.ObtainTokenPairView.as_view(), name='token_create'),
     path('token/refresh', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('userCreateAccount', views.userCreateAccountView.as_view(), name='userCreateAccount'),
+    path('blog/comments', views.blogComment.as_view(), name="blogcomments"),
     # path('token/check', views.checkToken.as_view(), name="checkToken"),
     url(r'^', include('blog.urls')),
 ]

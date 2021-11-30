@@ -61,6 +61,11 @@ class blogPosts(models.Model):
     Updated = models.CharField(max_length = 100)
     dateOfPublish = models.DateTimeField(auto_now_add=True)
 
+class blogComments(models.Model):
+    blogID = models.ForeignKey(blogPosts, default=None, on_delete=models.CASCADE)
+    comment = models.TextField()
+
+
 
 
 

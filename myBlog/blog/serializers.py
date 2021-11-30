@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from blog.models import users, blogPosts
+from blog.models import users, blogPosts, blogComments
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
@@ -45,6 +45,29 @@ class blogPostsSerializer(serializers.ModelSerializer):
         'ImageName',
         'dateOfPublish',
         'Updated')
+
+
+class blogCommentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = blogComments
+        fields = ('blogID_id', 
+        'comment')
+
+        def create(self, validated_data):
+                commentSubmission = blogComments.objects.create(
+                    blogID = validated_data['blogID_id'],
+                    comment = validated_data['comment'],
+                )
+                commentSubmission.save()
+                print("The submission saved correctly")
+                return commentSubmission
+
+
+
+class blogCommentsDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = blogComments
+        fields = ('blogID_id', 'comment')
 
 
 

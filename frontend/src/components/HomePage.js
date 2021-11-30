@@ -6,15 +6,17 @@ import Image3 from "../static/Images/pic3.jpg";
 import "../static/css/homePage.scss";
 import axios from 'axios'
 import {Link} from "react-router-dom";
+const config = require('./constants').config()
 
 function HomePage() {
 
     const [blogs, setBlogs] = useState(null);
   
     async function getBlogInfo() {
-     await axios.get('http://127.0.0.1:8000/blog')
+     await axios.get(config.API_URL + 'blog')
       .then(res => {
           setBlogs(res.data)
+          console.log(res.data)
       })
   }
 
@@ -46,27 +48,18 @@ function HomePage() {
         </Jumbotron>
         <div className="container blogContainer">
         <div className="row">
-        <div className="images col-9">
+        <div className="images col-12">
         <div className="row">
         {blogs && blogs.map((blog, index) => {
             return (
               <div className="blog col-6" key={index}>
-                <Link to={"blogs/" + blog.blogId}><img src={"http://127.0.0.1:8000/media/" + blog.ImageName} alt="somethingHere"/></Link>
+                <Link to={"blogs/" + blog.blogId}><img src={config.API_URL +  "media/" + blog.ImageName} alt="blogImg"/></Link>
                 <p className="blogName">{blog.Name}</p>
               </div>
             );
           })}
         </div>
         </div>
-          <div className="listOfBlogs col-3">
-            <p><a href="#">blog 1</a></p>
-            <p><a href="#">blog 2</a></p>
-            <p><a href="#">blog 3</a></p>
-            <p><a href="#">blog 4</a></p>
-            <p><a href="#">blog 5</a></p>
-          </div>
-
-
         </div>
         </div>
       </div>

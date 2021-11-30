@@ -14,19 +14,29 @@ body, html {
     width: 30%;
 }
 
+.navBarLinks {
+    margin-left: 50% !important;
+    text-align: center !important;
+    transform: translate(-50%, 0%);
+}
+
 
 .nav-item {
-    width: 130px !important;
-    padding-left: 0% !important;
-    padding-right: 0% !important;
+    padding-left: 5% !important;
+    padding-right: 5% !important;
+    font-size: 130%;
 }
 
 .homeLink, .pollsLink {
-    width: 100px !important;
+    width: 250px !important;
 }
 
 .link {
     color: white;
+}
+
+.navBarSearch {
+    transform: translate(0%, 20%);
 }
 
 .jumbotron {

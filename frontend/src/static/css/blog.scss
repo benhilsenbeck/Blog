@@ -10,4 +10,52 @@
     .blogBody {
         margin-top: 10%; 
     }
+
+    hr {
+        background-color: white;
+    }
+}
+
+.commentSection {
+    margin-top: 5%;
+    padding-bottom: 5%;
+
+    .postedComments {
+        padding-top: 5%;
+        padding-bottom: 5%;
+
+        .commentText {
+            padding-top: 3%;
+            padding-bottom: 2%;
+            color: white;
+            text-align: left;
+
+            hr {
+                background-color: grey;
+            }
+        }
+    }
+    
+    .commentTitle {
+        left: 0%;
+        font-size: 150%;
+        font-weight: 500;
+        text-align: left;
+    }
+
+    .commentMain {
+        padding: 0% !important;
+        width: 70%;
+
+        textarea {
+            padding: 0% !important;
+        }
+
+        button {
+            display: block;
+            margin-left: auto;
+            margin-top: 1%;
+        }
+    }
+
 }
