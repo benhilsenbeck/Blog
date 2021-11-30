@@ -8,5 +8,3 @@ I used react.js as the fronted and used Django for the backend.
 There is still a lot more the blog is lacking in terms of what you would expect
 from a normal blog. I would like to add the ability to comment on blogs, sign
 up, and favorite certain categories of blogs that a user likes.
-
-<h2><b>Demo</b></h2>
