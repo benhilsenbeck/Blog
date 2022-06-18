@@ -27,9 +27,6 @@ class UserManager(BaseUserManager):
 
         return user
     
-
-
-
 class users(AbstractBaseUser):
     userId = models.AutoField(primary_key=True)
     fName = models.CharField(max_length = 20)
@@ -60,11 +57,25 @@ class blogPosts(models.Model):
     ImageName = models.CharField(max_length=100)
     Updated = models.CharField(max_length = 100)
     dateOfPublish = models.DateTimeField(auto_now_add=True)
+    Category = models.CharField(max_length = 100, default=None)
 
 class blogComments(models.Model):
     blogID = models.ForeignKey(blogPosts, default=None, on_delete=models.CASCADE)
     comment = models.TextField()
 
+
+class polls(models.Model):
+    Title = models.CharField(max_length=100)
+    Image1 = models.CharField(max_length=100)
+    Image2 = models.CharField(max_length=100)
+    Button1 = models.CharField(max_length=20)
+    Button2 = models.CharField(max_length=20)
+    Image1Votes = models.IntegerField(default=0)
+    Image2Votes = models.IntegerField(default=0)
+    Category = models.CharField(max_length=100, default=None)
+
+class userEmail(models.Model):
+    Email = models.CharField(max_length=200, unique=True)
 
 
 

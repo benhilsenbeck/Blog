@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from blog.models import users, blogPosts, blogComments
+from blog.models import users, blogPosts, blogComments, polls, userEmail
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
@@ -70,9 +70,33 @@ class blogCommentsDataSerializer(serializers.ModelSerializer):
         fields = ('blogID_id', 'comment')
 
 
+class pollsDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = polls
+        fields = ('id', 'Title', 'Image1', 'Image2', 'Button1', 'Button2', 'Image1Votes', 'Image2Votes', 'Category')
+
+
+class votesDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = polls
+        fields = ('Image1Votes', 'Image2Votes')
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super(MyTokenObtainPairSerializer, cls).get_token(user)
         return token
+
+class userEmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = userEmail
+        fields = ('id', 'Email')
+
+        def create(self, validated_data):
+                emailSubmission = userEmail.objects.create(
+                    email = validated_data["Email"],
+                )
+                emailSubmission.save()
+                print("The submission saved correctly")
+                return emailSubmission

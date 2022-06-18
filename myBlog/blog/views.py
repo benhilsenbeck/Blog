@@ -3,13 +3,15 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from rest_framework_simplejwt.views import TokenObtainPairView
-from blog.models import users, blogPosts, blogComments
-from blog.serializers import usersSerializer, blogPostsSerializer, MyTokenObtainPairSerializer, userAccountsSerializer, blogCommentsSerializer, blogCommentsDataSerializer
+from blog.models import users, blogPosts, blogComments, polls
+from blog.serializers import usersSerializer, blogPostsSerializer, MyTokenObtainPairSerializer, userAccountsSerializer, blogCommentsSerializer, blogCommentsDataSerializer, pollsDataSerializer, votesDataSerializer, userEmailSerializer
 from django.core.files.storage import default_storage
 from rest_framework import status, permissions 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password
+from django.db.models import F
+import json
 
 class ObtainTokenPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -57,7 +59,6 @@ def usersApi(request, id=0):
         user.delete()
         return JsonResponse("Deleted Succesfully!!", safe=False)
 
-
 def blogApi(request, id=0):
     permission_classes = (permissions.AllowAny,)
     if request.method =="GET":
@@ -98,6 +99,11 @@ def blogSpecific(request, id=0):
         blogs_serializer = blogPostsSerializer(blogs)
         return JsonResponse(blogs_serializer.data, safe=False)
 
+# class blogCategory(APIView):
+#     def get(self, request):
+#         blogPosts.objects.filter(Category = [request.GET['Category']])
+
+
 class blogComment(APIView):
     permission_classes = (permissions.AllowAny,)
     def get(self, request):
@@ -115,19 +121,77 @@ class blogComment(APIView):
             print("serializer failed to post comment")
             return Response("Invalid")
 
+class blogPolls(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def get(self, request):
+        blog_polls = polls.objects.all()
+        polls_serializer = pollsDataSerializer(blog_polls, many=True)
+        return JsonResponse(polls_serializer.data, safe=False)
+    
+    def post(self, request):
+        print (request.data['button'])
+        if request.data['buttonPosition'] == 1:
+            Votes = polls.objects.filter(Button1 = request.data['button'])
+            Votes.update(Image1Votes=F('Image1Votes')+1)
+        else:
+            Votes = polls.objects.filter(Button2 = request.data['button'])
+            Votes.update(Image2Votes=F('Image2Votes')+1)
+        image1Votes = Votes.values('Image1Votes')[0]['Image1Votes']
+        image2Votes = Votes.values('Image2Votes')[0]['Image2Votes']
+        totalVotes = image1Votes + image2Votes
+        image1Percentage = round((image1Votes / totalVotes) * 100)
+        image2Percentage = round((image2Votes / totalVotes) * 100)
+        results = [image1Percentage, image2Percentage]
+        return JsonResponse(results, safe=False)
 
-# def blogComment(request, id=0):
-#     permission_classes = (permissions.AllowAny,)
-#     if request.method == "POST":
-#         serializer = blogCommentsSerialzer(data=request.data)
-#         if serializer.is_valid():
-#             print("serializer submitted successfully")
-#             return Response("Valid")
-#         else:
-#             print("serializer failed to post comment")
-#             return Response("Invalid")
+        # votes_data_serializer = votesDataSerializer(Votes, many=True)
+        # print(votes_data_serializer)
+        # totalVotes = json.dumps(votes_data_serializer)
+        # print(totalVotes)
+        # return JsonResponse(votes_data_serializer.data, safe=False)
 
-#     if request.method =="GET":
-#         comments = blogComments.objects.get(blogID_id = id)
-#         blogs_comment_serializer = blogCommentsDataSerializer(comments)
-#         return JsonResponse(blogs_serializer.data, safe=False)
+class allBlogPollPercentages(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def get(self, request):
+        try:
+            pollNumbers = request.GET['pollIds']
+            pollArray = pollNumbers.split(",")
+            resultArray = []
+            resultDict = {}
+            for i in pollArray:
+                image1Votes = polls.objects.filter(id=i).values('Image1Votes')[0]['Image1Votes']
+                image2Votes = polls.objects.filter(id=i).values('Image2Votes')[0]['Image2Votes']
+                totalVotes = image1Votes + image2Votes
+                image1Percentage = round((image1Votes / totalVotes) * 100)
+                image2Percentage = round((image2Votes / totalVotes) * 100)
+                resultDict[i] = [image1Percentage, image2Percentage]
+            # print(resultDict)
+            return Response(resultDict)
+        except:
+            return Response("NoVotes")
+
+
+class pollCategory(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def get(self, request):
+        pollCategories = polls.objects.filter(Category = request.GET['Category'])
+        poll_Categories = pollsDataSerializer(pollCategories, many=True)
+        return JsonResponse(poll_Categories.data, safe=False)
+
+class blogCategory(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def get(self, request):
+        blogCategories = blogPosts.objects.filter(Category = request.GET['Category'])
+        blog_Categories = blogPostsSerializer(blogCategories, many=True)
+        return JsonResponse(blog_Categories.data, safe=False)
+
+class userEmail(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def post(self, request):
+        serializer = userEmailSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response("Valid")
+        else:
+            return Response("The Serializer was not valid")
+

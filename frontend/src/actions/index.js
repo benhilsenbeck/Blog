@@ -16,7 +16,6 @@ export const logout = () => {
     }
 }
 
-
 export const search = () => {
     return {
         type: 'SEARCH'
@@ -28,3 +27,25 @@ export const stopSearch = () => {
         type: 'STOP_SEARCH'
     }
 }
+
+export const setBlogID = (id) => {
+    return {
+        type: 'SET_BLOG_ID',
+        id: id
+    }
+}
+
+export const setCategoryBlog = (category) => {
+    return {
+        type: 'SET_CATEGORY_BLOG',
+        category: category
+    }
+}
+
+export const setCategoryPolls = (category) => {
+    return {
+        type: 'SET_CATEGORY_POLLS',
+        category: category
+    }
+}
+

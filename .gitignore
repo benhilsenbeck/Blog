@@ -5,3 +5,4 @@ package-lock.json
 .env
 .eslintcache
 readme.txt
+/blogPackages

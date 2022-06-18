@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
+import {useSelector} from 'react-redux';
 import "../static/css/blog.scss";
 let Filter = require('bad-words')
 const config = require('./constants').config()
 
 function Blogs() {
   const history = useHistory();
-  var blogUrl = window.location.href;
-  var startIndex = blogUrl.lastIndexOf("/");
-  blogUrl = blogUrl.substring(startIndex + 1);
   const [blogContent, setBlogContent] = useState({
     blogId: null,
     blogName: null,
@@ -20,10 +18,13 @@ function Blogs() {
   });
   let [comment, setComment] = useState(null)
   let [blogComments, setBlogComments] = useState(null)
+  const blogIDIsSet = useSelector(state => state.setBlogId)
+  
 
   async function getBlogId() {
+    console.log(blogIDIsSet)
     await axios
-      .get(config.API_URL + "blogSpecific/" + blogUrl)
+      .get(config.API_URL + "blogSpecific/" + blogIDIsSet)
       .then((res) => {
         setBlogContent({
           blogId: res.data.blogId,
@@ -45,12 +46,11 @@ function Blogs() {
   const getComments = async () => {
       await axios.get(config.API_URL + "blog/comments", {
           params: {
-            blogID_id: blogUrl
+            blogID_id: blogIDIsSet
           }
       })
       .then((res) => {
           setBlogComments(res.data)
-          console.log(res.data)
       })
   }
 
@@ -60,21 +60,21 @@ function Blogs() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const checkComment = (text) => {
+
+  const checkComment = async (text) => {
     let filter = new Filter();
     let result = filter.clean(text);
-    setComment(result)
+    return result
   } 
 
   const handleSubmit = async (e) => {
       e.preventDefault();
-      checkComment(comment)
-      console.log(comment)
+      let result = await checkComment(comment)
+      console.log(result)
       await axios.post(config.API_URL + "blog/comments", {
-          blogID_id:  blogUrl,
-          comment: comment,
+          blogID_id:  blogIDIsSet,
+          comment: result,
       })
-
       await getComments()
       document.getElementById("commentBox").value="";
   }
